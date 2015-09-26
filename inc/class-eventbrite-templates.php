@@ -105,6 +105,7 @@
 
 		// Add our template to any existing templates.
 		$templates['eventbrite-index.php'] = 'Eventbrite Events';
+		$templates['eventbrite-cachemakers.php'] = 'Cachemakers Eventbrite Events';
 
 		// Update the cache that includes our template.
 		wp_cache_add( $cache_key, $templates, 'themes', 1800 );
