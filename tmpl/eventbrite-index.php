@@ -1,4 +1,3 @@
-Wow!
 <?php
 /**
  * Template Name: Eventbrite Events
