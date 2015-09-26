@@ -41,7 +41,7 @@ get_header(); ?>
 									<?php eventbrite_event_meta(); ?>
 								</div><!-- .entry-meta -->
 							</header><!-- .entry-header -->
-
+<!--
 							<div class="entry-content">
 								<?php eventbrite_ticket_form_widget(); ?>
 							</div><!-- .entry-content -->
