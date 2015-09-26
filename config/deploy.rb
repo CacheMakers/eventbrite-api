@@ -36,10 +36,19 @@ role :db,  "cachemakers.usu.edu", :primary => true # This is where Rails migrati
 #   end
 # end
 
-namespace "eventbrite-api" do
-    task :symlink, :roles => :app do
-        run "sudo ln -nfs /home/joel/wp-plugins/eventbrite-api/current /var/www/html/cachemakers.org/public/wp-content/plugins/eventbrite-api"
-    end
+namespace "eventbrite" do
+  task :symlink, :roles => :app do
+    run "sudo ln -nfs /home/joel/wp-plugins/eventbrite-api/current /var/www/html/cachemakers.org/public/wp-content/plugins/eventbrite-api"
+  end
+  task :restart_webserver, :roles => :app do
+    run "sudo service apache2 restart"
+  end
 end
 
-after "deploy:symlink", "eventbrite-api:symlink"
+after "deploy:symlink", "eventbrite:symlink"
+
+namespace :deploy do
+  task :restart, :except => { :no_release => true } do
+    eventbrite.restart_webserver
+  end
+end
