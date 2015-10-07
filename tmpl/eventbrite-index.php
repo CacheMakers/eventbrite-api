@@ -1,46 +1,4 @@
-<!--  Notes
 
-           *****Current****
-               Working on image slider 
-               finish two css styles. one for full screen
-               switch on the fly
-              
-               
-
-                TODO
-                *finish css group meta
-                *add announcement text
-                *create tempalte files for slider, sidebar 
-                *fix overlapping group meta slider 
-                *dual slider css to make announcements fall beneath slider when resized
-                *onclick go to next announcement / add overlay arrows
-                
-                LOG
-10/1/15  - instantiate new query object and create new loop to get announcements in announcements block
-
-            enque styles and javascript - call within eventbrite-index template
-            add functions in functions_php
-            Having trouble getting link to single event details page
-            
-10/2/15  - Add Image slider announcements. Slick Slider?
-           working on Link Text color style
-           
-
-                
-                General Notes
-
-eventbrite_event_meta() located in eventbrite/functions.php
-query methods located in eventbrite/query.php - Create new query for new wordpress loop
-
-
-           *****Updates******
-
-10/2/15 - added post_num and get_post_num to get group styles in eventbrite-query
-10/5/15 - finished group post template. located in eventbrite-api/functions.php
-
-
-
--->
 
 
 
@@ -190,17 +148,6 @@ jQuery(document).ready(function()
 get_header(); ?>
 
 
-<!--	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
-			<header class="page-header">
-				<h1 class="page-title">
-					<?//php the_title(); ?>
-				</h1>
-			</header>
--->
-
-<!--<div class="cachemakers container">	-->
-
     <div class="cachemakers slider holder"> 
         <div class="cachemakers slider slid full"> <!-- Announcement Slider -->
             
@@ -239,38 +186,7 @@ get_header(); ?>
 					while ( $events->have_posts() ) : $events->the_post(); ?>
 					
 	 
-	 <?php /*
-        <div class="group container innerblock" id="event-<?php the_ID(); ?>" >
-                    <div class="group large <?php $events->eventbrite_get_post_style(); ?>">
-                            <div class ="group photocontainer"><?php the_post_thumbnail(); ?></div> 
 
-
-
-                            <div class="group details"> 
-                                <div class ="group detailtext">
-                                  
-                                   
-                                   <p class = "group detailtext">
-                                       <?php echo eventbrite_event_day(); ?>
-                                       <br>
-                                       <?php echo eventbrite_event_time(); ?>
-                                   </p>
-                                   
-                                   <a href="<?php echo get_the_permalink(); ?>"> Details</a> - <a href="<?php echo eventbrite_event_venue()->name; ?>"</a> <a href="<?php echo eventbrite_event_eb_url(); ?>"> <?php echo eventbrite_event_venue()->name; ?></a> -<a href="<?php echo eventbrite_event_eb_url();?>"> Sign Up</a>
-                                   
-                                </div>
-                                <div class="group title">
-                                  <div class="group titletext">
-                                      <?php the_title()?>
-                                  </div>
-                            </div>
-                            </div>
-                    </div>
-                </div>
-     
-                
-*/ ?>
-    
 
                 <?php echo eventbrite_group_post($events);?>
 
