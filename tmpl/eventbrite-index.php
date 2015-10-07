@@ -1,4 +1,4 @@
-
+ 
 
 
 
@@ -188,7 +188,10 @@ get_header(); ?>
 	 
 
 
-                <?php echo eventbrite_group_post($events);?>
+                <?php
+                
+                echo eventbrite_group_post($events);  //added new template function to /inc/functions.php
+                ?> 
 
 					<?php endwhile;
 
