@@ -13,6 +13,14 @@ class Eventbrite_Query extends WP_Query {
 	 * @var object
 	 */
 	protected $api_results;
+	
+	/**
+	
+	store post number to cycle between group color style
+	get_post_num() returns post number % num_styles and increments number
+	
+	**/
+	private $post_num;
 
 	/**
 	 * Constructor.
@@ -37,6 +45,8 @@ class Eventbrite_Query extends WP_Query {
 
 		// Put our query in motion.
 		$this->query( $query );
+		
+		$post_num = 0; //initialize post value
 	}
 
 	/**
@@ -56,31 +66,31 @@ class Eventbrite_Query extends WP_Query {
 
 		// Filter by organizer ID if an "author archive" (organizer events) was requested.
 		$organizer_id = get_query_var( 'organizer_id' );
-		if ( empty( $query['organizer_id'] ) && ! empty( $organizer_id ) ) {
+		if ( ! empty( $organizer_id ) ) {
 			$query['organizer_id'] = (int) $organizer_id;
 		}
 
 		// Filter by venue ID if a venue archive (all events at a certain venue) was requested.
 		$venue_id = get_query_var( 'venue_id' );
-		if ( empty( $query['venue_id'] ) && ! empty( $venue_id ) ) {
+		if ( ! empty( $venue_id ) ) {
 			$query['venue_id'] = (int) $venue_id;
 		}
 
 		// Filter by category ID if a category archive (all events in a certain category) was requested.
 		$category_id = get_query_var( 'category_id' );
-		if ( empty( $query['category_id'] ) && ! empty( $category_id ) ) {
+		if ( ! empty( $category_id ) ) {
 			$query['category_id'] = (int) $category_id;
 		}
 
 		// Filter by subcategory ID if a subcategory archive (all events in a certain subcategory) was requested.
 		$subcategory_id = get_query_var( 'subcategory_id' );
-		if ( empty( $query['subcategory_id'] ) && ! empty( $subcategory_id ) ) {
+		if ( ! empty( $subcategory_id ) ) {
 			$query['subcategory_id'] = (int) $subcategory_id;
 		}
 
 		// Filter by format ID if a format archive (all events in a certain format) was requested.
 		$format_id = get_query_var( 'format_id' );
-		if ( empty( $query['format_id'] ) && ! empty( $format_id ) ) {
+		if ( ! empty( $format_id ) ) {
 			$query['format_id'] = (int) $format_id;
 		}
 
@@ -150,17 +160,10 @@ class Eventbrite_Query extends WP_Query {
 			$params['page'] = ceil( $this->query_vars['paged'] / 5 );
 		}
 
-		// We need the Eventbrite user ID (or an organizer) if we're getting only public events.
+		// We need the Eventbrite user ID if we're getting only public events.
 		if ( ! isset( $this->query_vars['display_private'] ) || true !== $this->query_vars['display_private'] ) {
-			// Set sorting.
+			$params['user.id'] = Eventbrite_API::$instance->eventbrite_external_id;
 			$params['sort_by'] = 'date';
-
-			// Set the user ID if we don't have a specified organizer.
-			if ( ! empty( $this->query_vars['organizer_id'] ) ) {
-				$params['organizer.id'] = (int) $this->query_vars['organizer_id'];
-			} else {
-				$params['user.id'] = Eventbrite_API::$instance->eventbrite_external_id;
-			}
 		}
 
 		return $params;
@@ -509,4 +512,26 @@ class Eventbrite_Query extends WP_Query {
 
 		return $name;
 	}
+
+	public function get_post_num()
+		{
+			$num = $this->post_num;
+		 	++$this->post_num;	
+			return $num;
+		}
+	
+	public function eventbrite_get_post_style()
+		{
+			 /*cycles through all group styles*/
+                     $style_num = $this->get_post_num() % 4; /*number of styles. implement auto-update num_styles*/
+                     
+                     if($style_num == 0){return "red";}
+                     else if($style_num == 1){return "yellow";}
+                     else if($style_num == 2){return "pastelblue";}
+                     else if($style_num == 3){return "pastelgreen";}
+
+                     else{return "red";}
+		}
+	
+	
 }

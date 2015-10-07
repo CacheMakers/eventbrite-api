@@ -224,17 +224,39 @@ if ( ! function_exists( 'eventbrite_event_time' ) ) :
 function eventbrite_event_time() {
 	// Determine if the end time needs the date included (in the case of multi-day events).
 	$end_time = ( eventbrite_is_multiday_event() )
-		? mysql2date( 'F j Y, g:i A', eventbrite_event_end()->local )
+		? mysql2date( 'g:i A', eventbrite_event_end()->local )
 		: mysql2date( 'g:i A', eventbrite_event_end()->local );
 
 	// Assemble the full event time string.
 	$event_time = sprintf(
 		_x( '%1$s - %2$s', 'Event date and time. %1$s = start time, %2$s = end time', 'eventbrite_api' ),
-		esc_html( mysql2date( 'F j Y, g:i A', eventbrite_event_start()->local ) ),
+		esc_html( mysql2date( 'g:i A', eventbrite_event_start()->local ) ),
 		esc_html( $end_time )
 	);
 
 	return $event_time;
+}
+endif;
+
+if ( ! function_exists( 'eventbrite_event_dates' ) ) :
+/**
+ * Return an event's time.
+ *
+ * @return string Event time.
+ */
+function eventbrite_event_day() {
+
+	$event_date = sprintf(
+		//_x( '%1$s , %1$s = start time, eventbrite_api' ),
+	    _x( '%1$s\'s', 'Event day of week. %1$s = start day', 'eventbrite_api' ),
+
+		esc_html( mysql2date( 'l', eventbrite_event_start()->local ) )
+		
+	);
+	$event_date;
+
+
+	return $event_date;
 }
 endif;
 
@@ -361,6 +383,30 @@ function eventbrite_venue_get_archive_link() {
 }
 endif;
 
+
+if ( ! function_exists( 'eventbrite_get_details_page_url()' ) ) :
+/**
+ * Output a permalink to a venue's "archive" page.
+ *
+ * @return string URL
+ */
+function eventbrite_get_details_page_url($id) {
+	
+	// Get the permalink of the current template page.
+	$url = get_the_permalink;
+
+	// If the event has a venue set, append it to the URL. http://(page permalink)/venue/(venue name)-(venue ID)/
+	//if ( ! empty( eventbrite_event_venue()->name ) ) {
+	//	$url .= 'venue/' . sanitize_title( eventbrite_event_venue()->name ) . '-' . absint( eventbrite_event_venue()->id );
+	//}
+
+	return $url;
+
+	
+}
+endif;
+
+
 if ( ! function_exists( 'eventbrite_edit_post_link' ) ) :
 /**
  * Output a link to edit the current event on eventbrite.com.
@@ -437,12 +483,12 @@ function eventbrite_get_ticket_form_widget_height() {
 	// Check each ticket.
 	foreach ( $tickets as $ticket ) {
 		// Add height for each visible ticket type.
-		if ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) {
+		if ( ! $ticket->hidden ) {
 			$height += 45;
 		}
 
 		// Check if any visible sales are still open.
-		if ( ( ! isset( $ticket->sales_end ) || time() < mysql2date( 'U', $ticket->sales_end ) ) && ( ! isset( $ticket->hidden ) || true != $ticket->hidden ) ) {
+		if ( ( time() < mysql2date( 'U', $ticket->sales_end ) ) && ! $ticket->hidden ) {
 			$sales_open = true;
 		}
 	}
@@ -464,3 +510,42 @@ endif;
 function eventbrite_has_active_connection() {
 	return ( Eventbrite_Requirements::has_active_connection() );
 }
+
+if ( ! function_exists( 'eventbrite_group_post' ) ) :
+
+function eventbrite_group_post($current){
+	
+	
+	$post_string = "";
+
+
+	$post_string .=   "<div class='group container innerblock' id='event-" . get_the_ID() .  "'>";
+		$post_string .=  "<div class='group large " . $current->eventbrite_get_post_style() . "'>";
+                $post_string .=  "<div class ='group photocontainer'>";
+                           $post_string .=  get_the_post_thumbnail() . "</div>";
+                          
+
+
+
+                           $post_string .= "<div class='group details'>";
+                                $post_string .= "<div class ='group detailtext'>";
+         
+                                   $post_string .= "<p class = 'group detailtext'>";
+                                       $post_string .= eventbrite_event_day(); 
+                                       $post_string .= "<br>";
+                                       $post_string .=  eventbrite_event_time() .  "</p>";
+                                  
+                                   
+                                   		 $post_string .= "<a href='" . get_the_permalink() . "'> Details</a> - <a href='" . eventbrite_event_venue()->name . "</a> <a href='" . eventbrite_event_eb_url() . "'>" . eventbrite_event_venue()->name . "</a> -<a href='" .  eventbrite_event_eb_url() . "'> Sign Up</a></div>";
+                			 	$post_string .= " <div class='group title'>";
+                  	    	 $post_string .= "<div class='group titletext'>";
+                         $post_string .=  get_the_title();
+    $post_string .= "</div></div></div></div></div>";
+     
+     
+     
+     return $post_string;
+ 
+}
+
+endif;

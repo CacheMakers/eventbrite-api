@@ -237,9 +237,7 @@ class Eventbrite_Manager {
 	 */
 	protected function get_transient_name( $endpoint, $params ) {
 		// Results in 62 characters for the timeout option name (maximum is 64).
-		$transient_name = 'eventbrite_' . md5( $endpoint . implode( $params ) );
-
-		return apply_filters( 'eventbrite_transient_name', $transient_name, $endpoint, $params );
+		return 'eventbrite_' . md5( $endpoint . implode( $params ) );
 	}
 
 	/**
