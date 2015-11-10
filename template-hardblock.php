@@ -1,29 +1,23 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<style>
-.red{background-color:#ff3722; color:white; font-size:18px}
-.cachemakers-block{height:auto; width:250px;display:inline-block;
-	position:relative;font-family:sans-serif; text-align:center;}
-#primary{}
-</style>
-
 <?php
 /**
  * Template Name: Eventbrite Events
  */
 
-
 get_header(); ?>
-	<div id="primary" <?php generate_content_class();?>>
+
+	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
 			<header class="page-header">
+				<h1 class="page-title">
+					<?php the_title(); ?>
+				</h1>
 			</header><!-- .page-header -->
 
-			<h1> Current Groups </h1>
 			<?php
 				// Set up and call our Eventbrite query.
 				$events = new Eventbrite_Query( apply_filters( 'eventbrite_query_args', array(
 					 'display_private' => true, // boolean
-					 'nopaging' => true,        // boolean
+					// 'nopaging' => false,        // boolean
 					// 'limit' => null,            // integer
 					// 'organizer_id' => null,     // integer
 					// 'p' => null,                // integer
@@ -35,19 +29,28 @@ get_header(); ?>
 				) ) );
 
 
-
 				if ( $events->have_posts() ) :
 					while ( $events->have_posts() ) : $events->the_post(); ?>
 
-						<div class="cachemakers-block red">
-							<div class="cachemakers-block-photo">
-								<?php echo get_the_post_thumbnail(); ?>
-							</div>
-							<div class="cachemakers-block-details">
-								<?php echo  get_the_title();?>
-							</div>
-						</div>
 
+					<div class='group container innerblock' id='event- <?php get_the_ID() ?>  "'>
+						<div class='group large " <?php $events->eventbrite_get_post_style()?> "'>
+				                <div class ='group photocontainer'>
+				                            <?php get_the_post_thumbnail(); ?>
+												</div>
+				                           <div class='group details'>
+				                                <div class ='group detailtext'>
+
+				                                   <p class = 'group detailtext'>
+				                                      <?php //$post_string .= eventbrite_event_day(); ?>
+				                                       <br>
+				                                       <?php //$post_string .=  eventbrite_event_time() .  "</p>"; ?>
+
+
+				                			 	 <div class='group title'>
+				                  	    	<div class='group titletext'>
+				                         		<?php get_the_title(); ?>
+				    </div></div></div></div></div>
 
 
 					<?php endwhile;
@@ -67,5 +70,6 @@ get_header(); ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
-	<?php get_sidebar(); ?>
-	<?php get_footer(); ?>
+
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

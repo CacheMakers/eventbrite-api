@@ -509,4 +509,25 @@ class Eventbrite_Query extends WP_Query {
 
 		return $name;
 	}
+	public function get_post_num()
+		{
+			$num = $this->post_num;
+		 	++$this->post_num;
+			return $num;
+		}
+	
+
+	public function eventbrite_get_post_style()
+	{
+		 /*cycles through all group styles*/
+									 $style_num = $this->get_post_num() % 4; /*number of styles. implement auto-update num_styles*/
+
+
+									 if($style_num == 0){return "bright-yellow";}
+									 else if($style_num == 1){return "bright-blue";}
+									 else if($style_num == 2){return "bright-red";}
+									 else if($style_num == 3){return "bright-green";}
+
+									 else{return "red";}
+	}
 }
